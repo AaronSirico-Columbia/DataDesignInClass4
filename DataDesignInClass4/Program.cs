@@ -3,10 +3,8 @@
 var Path = ($"{Directory.GetCurrentDirectory()}\\files");
 var FileList = Directory.GetFiles(Path).Where(fn => !fn.Contains("_out")).ToList();
 var OutFileList = Directory.GetFiles(Path).Where(fn => fn.Contains("_out")).ToList();
-List<string> data = new List<string>();
+List<string> dataList = new List<string>();
 
-
-int x = 0;
 
 
 foreach (var file in FileList)
@@ -16,34 +14,60 @@ foreach (var file in FileList)
     using (StreamReader sr = new StreamReader(AFile.Path)) 
     {
         var line = sr.ReadLine();
-
+       
         while (line != null)
         {
+            var data = line.Split(AFile.SetDelim(AFile.Path)).ToArray();
 
-            data = line.Split(AFile.SetDelim(AFile.Path)).ToList();
+            if (file.Contains(".csv") == true)
+            {
+                dataList.Add(data[0]);
+                dataList.Add(data[1]);
+                dataList.Add(data[2]);
+            }
+            else if (file.Contains(".txt"))
+            {
+
+                dataList.Add(data[3]);
+                dataList.Add(data[4]);
+                dataList.Add(data[5]);
+            }
+
             line = sr.ReadLine();
 
+            
         }
 
     }
 }
+
+
 
 foreach (var OFile in OutFileList)
 {
-
-
     using (StreamWriter sw = new StreamWriter(OFile))
     {
         int i = 1;
-
-        foreach (string line2 in data)
+        int x = 1;
+        for (x = 1; x < 4; x++)
         {
-            sw.WriteLine($"Field#{i}= {line2} ==> ");
-            i++;
+            sw.Write($"\nLine#{x} :");
+
+            foreach (string line2 in dataList)
+            {
+                sw.Write($"Field#{i}= {line2} ==> ");
+
+                i++;
+                if (i == 7)
+                {
+                    i = 1;
+                    break;
+                }
+            }
         }
     }
+       
 }
-
 
 
 
